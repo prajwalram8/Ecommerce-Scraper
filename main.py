@@ -61,8 +61,9 @@ def preprocess_and_upload_spinneys(name = 'spinneys', load_type='insert'):
 
 if __name__ == "__main__":
     if preprocess_and_upload_spinneys():
-        logger.info("loaded!")
-
+        logger.info("Spinneys loaded!")
     
-        # logger.info("data extracted and loaded")
+    if preprocess_and_upload_carrefour():
+        logger.info("Carrefour loaded")
+
 

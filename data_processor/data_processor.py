@@ -1,9 +1,9 @@
 # data_processor/data_processor.py
 import os
 import csv
-import glob
 import pandas as pd
 from utils.logger import setup_logging 
+import datetime as dt
 
 logger = setup_logging("data_processor")
 
@@ -143,28 +143,33 @@ class LocalStageOrchestrator:
         """
         Process Excel files: read the files, clean the data, and save it as CSV files
         """
+        print(os.listdir(input_location))
         for i, file_name in enumerate(os.listdir(input_location), start=1):
             file_path = os.path.join(input_location, file_name)
+            print(file_path)
             try:
                 if (file_name.endswith('.xlsx') or file_name.endswith('.XLSX') or file_name.endswith('.xls')) and os.path.isfile(file_path):
                     # Read the Excel file
                     df = pd.read_excel(file_path)
+                    print('Excel File')
                 elif file_name.endswith('.csv') and os.path.isfile(file_path):
                     df = pd.read_csv(file_path)
+                    print('CSV File')
+                else:
+                    continue
             except Exception as e:
                 logger.error(f"Error while reading the files in the input folder: {e}")
                 raise
-
-            # Log Column mismatch if any
-            if i == 1:
-                log_col_mismatch = ColumnMismatch(column_context=set(df.columns))
-            log_col_mismatch.log_column_mismatch(df, file_name)
             
+            # Adding load date time stamp
+            df['loadDateTime'] = dt.datetime.now()
+
             # Clean the DataFrame
             df = self.preprocess(df)
             
             # Add Column for file identifier
             df['File Name'] = file_name
+
             
             # Save the DataFrame as a CSV file
             stage_file_path = os.path.join(self.staging_location, f'{os.path.splitext(file_name)[0]}.csv')

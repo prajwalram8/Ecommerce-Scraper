@@ -12,6 +12,7 @@ class ProjectDirectory:
         if not os.path.exists(self.name):
             os.makedirs(self.name)
             logger.info(f"Created Project Directory in path {self.name}")
+        self.created_directories[name] = self.name
         
         # Create default snowflake stage directory
         self.create_ds_if_not_exists('snowflake_stage')

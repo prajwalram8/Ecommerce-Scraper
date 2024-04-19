@@ -5,6 +5,7 @@ import re
 import json
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import os
 
 
 BASE_URL = 'https://www.spinneys.com/en-ae/catalogue/'
@@ -96,20 +97,19 @@ def process_page(page):
     return items
     
 
-def main():
+def main(local_stage, num_workers=5):
     all_items = []
     final_page_number = get_final_page_number() 
     
-    with ThreadPoolExecutor(max_workers=5) as executor:
+    with ThreadPoolExecutor(max_workers=num_workers) as executor:
             future_to_page = {executor.submit(process_page, page): page for page in range(final_page_number + 1)}
             for future in tqdm(as_completed(future_to_page), total=len(future_to_page)):
                 page_results = future.result()
                 all_items.extend(page_results)
 
-    return all_items
-
-
-items = main()
-print(len(items))
-items_df = pd.DataFrame(items, columns=['item_id', 'item_name', 'item_link', 'item_price', 'item_quantity'])
-items_df.to_csv('Spinneys.csv')
+    if all_items:
+        df =  pd.DataFrame(all_items, columns=['item_id', 'item_name', 'item_link', 'item_price', 'item_quantity'])
+        df.to_csv(os.path.join(local_stage, 'Spinneys.csv'))
+        return True
+    else:
+        return False

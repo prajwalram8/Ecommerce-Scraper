@@ -1,14 +1,20 @@
 import requests
 import pandas as pd
-import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm 
+import os
 
-category_master = pd.read_csv('menu2.csv')
+category_master = pd.read_csv('menu.csv')
 
-categories = ['F1600000','F11600000','F1700000','F1500000','F6000000','F1610000','F1200000','NF3000000','NF2000000','F1000000','NF8000000','F1100000','NF7000000']
+categories = [
+    'F1600000','F11600000','F1700000','F1500000','F6000000',
+    'F1610000','F1200000','NF3000000','NF2000000','F1000000',
+    'NF8000000','F1100000','NF7000000'
+    ]
 
-subcategories = category_master[category_master['L1_ID'].isin(categories)]['L3_ID'].to_list()
+subcategories = category_master[
+    category_master['L1_ID'].isin(categories)
+    ]['L3_ID'].to_list()
 
 params = {
     'filter': '',
@@ -36,7 +42,7 @@ headers = {
     'Accept-Language': 'en-AE,en-GB;q=0.9,en-US;q=0.8,en;q=0.7',
     'Appid': 'Reactweb',
     'Credentials': 'include',
-    'Deviceid': '1298535093.1704889303',
+    # 'Deviceid': '1298535093.1704889303',
     'Env': 'prod',
     'If-Modified-Since': 'Wed, 10 Jan 2024 12:21:55 GMT',
     'Intent': 'STANDARD',
@@ -48,9 +54,9 @@ headers = {
     'Sec-Fetch-Mode': 'cors',
     'Sec-Fetch-Site': 'same-origin',
     'Storeid': 'mafuae',
-    'Token': 'undefined',
+    # 'Token': 'undefined',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Userid': '2127C657-51AB-0352-DE99-EA65C2F3CC1D'
+    # 'Userid': '2127C657-51AB-0352-DE99-EA65C2F3CC1D'
 }
 
 
@@ -73,9 +79,9 @@ def fetch_category_data(cat):
         print(f"Error processing category {cat}: {e}")
         return pd.DataFrame()
 
-def main():
+def main(local_stage, num_workers=5):
     results = []
-    with ThreadPoolExecutor(max_workers=5) as executor:
+    with ThreadPoolExecutor(max_workers=num_workers) as executor:
         future_to_cat = {executor.submit(fetch_category_data, cat): cat for cat in subcategories}
         for future in tqdm(as_completed(future_to_cat), total=len(future_to_cat)):
             cat_results = future.result()
@@ -83,13 +89,13 @@ def main():
                 results.append(cat_results)  # Append DataFrame to results list
 
     if results:  # Check if the list is not empty
-        final_df = pd.concat(results, ignore_index=True)
-        print(f"Data collected, shape of final DataFrame: {final_df.shape}")
-        final_df.to_csv('final_df3.csv')
+        df = pd.concat(results, ignore_index=True)
+        df.to_csv(os.path.join(local_stage, 'Carrefour.csv'))
+        return True
     else:
-        print("No data to save.")
+        return False
 
 
 
 if __name__ == "__main__":
-    main()
+    main('./data', 10)

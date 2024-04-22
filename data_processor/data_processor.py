@@ -143,18 +143,14 @@ class LocalStageOrchestrator:
         """
         Process Excel files: read the files, clean the data, and save it as CSV files
         """
-        print(os.listdir(input_location))
         for i, file_name in enumerate(os.listdir(input_location), start=1):
             file_path = os.path.join(input_location, file_name)
-            print(file_path)
             try:
                 if (file_name.endswith('.xlsx') or file_name.endswith('.XLSX') or file_name.endswith('.xls')) and os.path.isfile(file_path):
                     # Read the Excel file
                     df = pd.read_excel(file_path)
-                    print('Excel File')
                 elif file_name.endswith('.csv') and os.path.isfile(file_path):
                     df = pd.read_csv(file_path)
-                    print('CSV File')
                 else:
                     continue
             except Exception as e:

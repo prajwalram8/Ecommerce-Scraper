@@ -48,5 +48,19 @@ def has_csv_files(folder_path):
         # No CSV files were found
         return False
 
+
+def has_json_files(folder_path):
+        """
+        Check if the given folder contains any JSON files
+        """
+        for file_name in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, file_name)
+            # Check if the file is a CSV file
+            if file_name.endswith('.json') and os.path.isfile(file_path):
+                return True
+
+        # No CSV files were found
+        return False
+
 def py_file_name():
     return os.path.basename(__file__).replace('.py','')

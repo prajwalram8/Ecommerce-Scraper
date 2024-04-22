@@ -16,7 +16,7 @@ def setup_logging(name):
                             filemode='a')  # append to the file, don't overwrite
 
         console = logging.StreamHandler()
-        console.setLevel(logging.INFO)
+        console.setLevel(logging.WARNING)
         console.setFormatter(logging.Formatter('%(name)s - %(levelname)s - %(message)s'))
 
         logging.getLogger('').addHandler(console)

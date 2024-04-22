@@ -45,8 +45,10 @@ This is built purely for educational purposes to be able to explore the options 
 ```
 
 ## Task List
+- [ ] App.log rotator
 - [ ] Add proxy hopping
 - [ ] Configure alert manager
 - [ ] Capability to handle table drift
 - [ ] Containerization
 - [ ] Add extra ecommerce source 
+- [ ] State management

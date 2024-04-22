@@ -31,7 +31,12 @@ def extract_info_from_grid(product):
     product_link = product_info.find('p', {'class': 'product-name'}).find('a')['href']
     product_price = product_info.find('p', {'class': 'product-price'}).find('span', {'class': 'price'}).text
     product_quantity = product_info.find('p', {'class': 'product-price'}).find('span', {'class': 'quantity'}).text.strip()
-    return product_name, product_link, product_price, product_quantity
+    return {
+        'item_name': product_name, 
+        'item_link': product_link, 
+        'item_price': product_price, 
+        'item_quantity': product_quantity
+        }
 
 def get_final_page_number():
     response = requests.get(url = BASE_URL, headers=HEADERS)
@@ -78,8 +83,7 @@ def process_page(page):
         # Parse JSON
         try:
             data = json.loads(json_string)
-            impressions = data['ecommerce']['impressions']
-            item_ids = [item['id'] for item in impressions]
+            item_ids = data['ecommerce']['impressions']
         except json.JSONDecodeError as e:
             print(f"Error parsing JSON: {e}")
     else:
@@ -91,8 +95,9 @@ def process_page(page):
     items.append(grid_new)
 
     ## Step 4: Joining the item ids with product info
-    items = list(zip(item_ids, items[0]))
-    items = [(t[0],) + t[1] for t in items]
+    # items = list(zip(item_ids, items[0]))
+    items = [{**x, **y} for x, y in zip(item_ids, items[0])]
+    # items = [(t[0],) + t[1] for t in items]
 
     return items
     
@@ -108,8 +113,13 @@ def main(local_stage, num_workers=5):
                 all_items.extend(page_results)
 
     if all_items:
-        df =  pd.DataFrame(all_items, columns=['item_id', 'item_name', 'item_link', 'item_price', 'item_quantity'])
-        df.to_csv(os.path.join(local_stage, 'Spinneys.csv'))
+        print(len(all_items),all_items)
+        with open(os.path.join(local_stage,'spinneys.json'), 'w') as f:
+            json.dump(all_items, f)
         return True
     else:
         return False
+    
+if __name__ == "__main__":
+    if main(local_stage='C:\\Users\\Prajwal.G\\Documents\\POC\\Ecom Scraper\\data\\spinneys'):
+        print("Done!")

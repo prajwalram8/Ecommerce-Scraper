@@ -71,7 +71,7 @@ def preprocess_and_upload_spinneys(name = 'SPINNEYS'):
     dc = JSONDataLoader()
 
     # Extraction and loading 
-    if True:#spinneys_main(local_stage=local_stage, num_workers=7):
+    if spinneys_main(local_stage=local_stage, num_workers=7):
         statement = '''
         JSON_DATA:"id"::STRING as EAN,
         JSON_DATA:"item_name"::STRING as NAME,
@@ -90,13 +90,49 @@ def preprocess_and_upload_spinneys(name = 'SPINNEYS'):
     else:
         logger.error("Extraction Not Completed")
         return False
+    
+
+def preprocess_and_upload_choithrams(name = 'CHOITHRAMS'):
+    """
+    Function to invoke the multi-threaded scrape script and load 
+    data into Snowflake
+    """
+    
+    # Initializing helper classes
+    local_stage = 'C:\\Users\\Prajwal.G\\Documents\\POC\\Ecom Scraper\\data\\choithrams'
+    dc = JSONDataLoader()
+
+    # Extraction and loading 
+    if True:
+        statement = '''
+        JSON_DATA:"item_id"::STRING as EAN,
+        JSON_DATA:"item_name"::STRING as NAME,
+        JSON_DATA:"price"::FLOAT as PRICE,
+        JSON_DATA:"item_category"::STRING as CATEGORY,
+        JSON_DATA:"item_brand"::STRING as BRAND,
+        JSON_DATA:"quantity"::FLOAT as QUANTITY,
+        CURRENT_TIMESTAMP() as LOAD_TIMESTAMP
+        '''
+        dc.manage_data_loading(
+        name='CHOITHRAMS', 
+        local_stage_path=local_stage,
+        select_statement=statement
+        )
+        logger.info(f"Extraction, Preprocessing & Upload of {name} has been completed.")
+        return True
+    else:
+        logger.error("Extraction Not Completed")
+        return False
 
 
 if __name__ == "__main__":
-    if preprocess_and_upload_spinneys():
-        logger.info("Spinneys loaded!")
+    # if preprocess_and_upload_spinneys():
+    #     logger.info("Spinneys loaded!")
     
     # if preprocess_and_upload_carrefour():
     #     logger.info("Carrefour loaded")
+
+    if preprocess_and_upload_choithrams():
+        logger.info("Choithrams Loaded!")
 
 

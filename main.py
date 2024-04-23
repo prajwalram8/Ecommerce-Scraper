@@ -1,11 +1,9 @@
 from carrefour.carrefour_mt_json import main as carrefour_main
 from spinneys.spinneys_mt import main as spinneys_main
+from choithrams.choithrams_mt import main as choithrams_main
 from utils.logger import setup_logging
-from data_processor.data_processor import LocalStageOrchestrator
-from utils.utils import ProjectDirectory
-import os
-from db.snowflake_loader import DataLoader
 from db.sf_json_load_2 import jsonDataLoader as JSONDataLoader
+
 
 # Initializing helper classes and functions
 logger = setup_logging('main')
@@ -103,7 +101,7 @@ def preprocess_and_upload_choithrams(name = 'CHOITHRAMS'):
     dc = JSONDataLoader()
 
     # Extraction and loading 
-    if True:
+    if choithrams_main(local_stage=local_stage,num_workers=7):
         statement = '''
         JSON_DATA:"item_id"::STRING as EAN,
         JSON_DATA:"item_name"::STRING as NAME,
@@ -126,13 +124,13 @@ def preprocess_and_upload_choithrams(name = 'CHOITHRAMS'):
 
 
 if __name__ == "__main__":
-    # if preprocess_and_upload_spinneys():
-    #     logger.info("Spinneys loaded!")
+    if preprocess_and_upload_spinneys():
+        logger.info("Spinneys loaded!")
     
     # if preprocess_and_upload_carrefour():
     #     logger.info("Carrefour loaded")
 
-    if preprocess_and_upload_choithrams():
-        logger.info("Choithrams Loaded!")
+    # if preprocess_and_upload_choithrams():
+    #     logger.info("Choithrams Loaded!")
 
 

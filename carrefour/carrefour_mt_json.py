@@ -1,10 +1,10 @@
-import requests
-import pandas as pd
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from tqdm import tqdm 
 import os
 import json
+import requests
+import pandas as pd
+from tqdm import tqdm 
 from utils.logger import setup_logging
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 logger = setup_logging('Carrefour-MT-JSON')
 
@@ -48,7 +48,7 @@ headers = {
     'Credentials': 'include',
     # 'Deviceid': '1298535093.1704889303',
     'Env': 'prod',
-    'If-Modified-Since': 'Wed, 10 Jan 2024 12:21:55 GMT',
+    # 'If-Modified-Since': 'Wed, 10 Jan 2024 12:21:55 GMT',
     'Intent': 'STANDARD',
     'Referer': 'https://www.carrefouruae.com',
     'Sec-Ch-Ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
@@ -80,7 +80,7 @@ def fetch_category_data(cat):
             df_list.append(response_json['products'])
         return df_list if df_list else []
     except Exception as e:
-        print(f"Error processing category {cat}: {e}")
+        logger.error(f"Error processing category {cat}: {e}")
         return []
 
 def main(local_stage, num_workers=5):
@@ -89,11 +89,11 @@ def main(local_stage, num_workers=5):
         future_to_cat = {executor.submit(fetch_category_data, cat): cat for cat in subcategories}
         for future in tqdm(as_completed(future_to_cat), total=len(future_to_cat)):
             cat_results = future.result()
-            results.extend(cat_results)  # Append DataFrame to results list
+            results.extend(cat_results)  # Extend the lists from the responses
 
     if results:  # Check if the list is not empty
         ls = [subeach for each in results for subeach in each]
-        print(len(ls))
+        logger.info(f"Total Items Scraped {len(ls)}")
         with open(os.path.join(local_stage,'carrefour.json'), 'w') as f:
             json.dump(ls, f)
         return True
@@ -101,4 +101,8 @@ def main(local_stage, num_workers=5):
         return False
 
 if __name__ == "__main__":
-    main(local_stage='./data', num_workers=5)
+    pass
+
+    # Test Cases
+    # print(fetch_category_data('F21630400'))
+    # main(local_stage='./data', num_workers=5)

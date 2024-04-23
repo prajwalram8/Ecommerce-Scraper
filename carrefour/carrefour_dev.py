@@ -29,7 +29,7 @@ headers = {
     'Credentials': 'include',
     'Deviceid': '1298535093.1704889303',
     'Env': 'prod',
-    'If-Modified-Since': 'Wed, 10 Jan 2024 12:21:55 GMT',
+    # 'If-Modified-Since': 'Wed, 10 Jan 2024 12:21:55 GMT',
     'Intent': 'STANDARD',
     'Referer': 'https://www.carrefouruae.com',
     'Sec-Ch-Ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
@@ -46,7 +46,7 @@ headers = {
 
 params['currentPage'] = 0
 
-url = url = f'https://www.carrefouruae.com/api/v8/categories/F1650300'
+url = url = f'https://www.carrefouruae.com/api/v8/categories/F21630400'
 
 response = requests.get(url, headers=headers, params=params)
 

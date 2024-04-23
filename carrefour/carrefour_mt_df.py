@@ -96,6 +96,5 @@ def main(local_stage, num_workers=5):
         return False
 
 
-
 if __name__ == "__main__":
     main('./data', 10)

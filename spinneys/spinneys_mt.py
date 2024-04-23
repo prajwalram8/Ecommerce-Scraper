@@ -1,12 +1,13 @@
-import requests
-import pandas as pd
-from bs4 import BeautifulSoup
+import os
 import re
 import json
+import requests
 from tqdm import tqdm
+from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import os
+from utils.logger import setup_logging
 
+logger = setup_logging('SPINNEYS')
 
 BASE_URL = 'https://www.spinneys.com/en-ae/catalogue/'
 
@@ -19,13 +20,29 @@ HEADERS = {
 }
 
 def check_script(script):
+    """
+    Function to check the list of script tags for the relevant script
+    """
     script_tag_contents = script.text
     if 'impressions' in script_tag_contents:
         return True
     else:
-        return False
+        return 
+    
+def print_near_error(json_string, index):
+    """
+    Function to return the section of the parsed json that is throwing 
+    error 
+    """
+    window = 100  # Adjust the window size to show more or less context
+    start = max(0, index - window)
+    end = min(len(json_string), index + window)
+    return json_string[start:end]
     
 def extract_info_from_grid(product):
+    """
+    Funtion to extract info from the product grid tag of the html
+    """
     product_info = product.find('div', {'class': 'product-info'})
     product_name = product_info.find('p', {'class': 'product-name'}).find('a').text
     product_link = product_info.find('p', {'class': 'product-name'}).find('a')['href']
@@ -39,10 +56,12 @@ def extract_info_from_grid(product):
         }
 
 def get_final_page_number():
+    """
+    Function to call the base url and extract the final page number
+    """
     response = requests.get(url = BASE_URL, headers=HEADERS)
     soup = BeautifulSoup(response.text, 'html.parser')
         
-    ## Step 3: Find Final Page Number and iterate across the pages
     page_num_tag = soup.find('div', {'class': 'page-numbers'}).find_all('a')
     page_num_tag = page_num_tag[-2].find('div', {'class': 'page-no-bx'}).text
     final_page_number = int(page_num_tag)
@@ -67,9 +86,11 @@ def process_page(page):
     ## Step 3.1: Extracting the Barcodes stores in the script tag
     script = soup.find_all('script')
     script_string = list(filter(lambda x: check_script(x), script))[0].text
+    
     # Extract JSON-like part from the <script> tag
     pattern = r"dataLayer\.push\((\{.*?\})\);"
     match = re.search(pattern, script_string, re.DOTALL)
+
     if match:
         json_string = match.group(1)
 
@@ -85,9 +106,13 @@ def process_page(page):
             data = json.loads(json_string)
             item_ids = data['ecommerce']['impressions']
         except json.JSONDecodeError as e:
-            print(f"Error parsing JSON: {e}")
+            logger.error(f"Error parsing JSON: {e} for page: {page}")
+            error_position = e.pos  # Using the exception's position attribute if available
+            snippet = print_near_error(json_string, error_position)
+            logger.error(f"Section of the JSON with issues \n {snippet}")
+            return items
     else:
-        print("Could not find the JavaScript object in the script content.")
+        logger.error(f"Could not find the JavaScript object in the script content for page {page}")
 
     ## Step 3.2: Extracting products from the grid
     grid = soup.find('div', {'class': 'arc-grid'}).find_all('div', {'class': 'js-product-wrapper product-bx'})
@@ -95,25 +120,22 @@ def process_page(page):
     items.append(grid_new)
 
     ## Step 4: Joining the item ids with product info
-    # items = list(zip(item_ids, items[0]))
     items = [{**x, **y} for x, y in zip(item_ids, items[0])]
-    # items = [(t[0],) + t[1] for t in items]
 
     return items
     
-
 def main(local_stage, num_workers=5):
     all_items = []
     final_page_number = get_final_page_number() 
     
     with ThreadPoolExecutor(max_workers=num_workers) as executor:
-            future_to_page = {executor.submit(process_page, page): page for page in range(final_page_number + 1)}
+            future_to_page = {executor.submit(process_page, page): page for page in range(1, final_page_number + 1)}
             for future in tqdm(as_completed(future_to_page), total=len(future_to_page)):
                 page_results = future.result()
                 all_items.extend(page_results)
 
     if all_items:
-        print(len(all_items),all_items)
+        logger.info(f"Total Items Scraped {len(all_items)}")
         with open(os.path.join(local_stage,'spinneys.json'), 'w') as f:
             json.dump(all_items, f)
         return True
@@ -121,5 +143,6 @@ def main(local_stage, num_workers=5):
         return False
     
 if __name__ == "__main__":
-    if main(local_stage='C:\\Users\\Prajwal.G\\Documents\\POC\\Ecom Scraper\\data\\spinneys'):
-        print("Done!")
+    pass
+    # if main(local_stage='C:\\Users\\Prajwal.G\\Documents\\POC\\Ecom Scraper\\data\\spinneys'):
+    #     print("Done!")

@@ -1,6 +1,5 @@
 import requests
 import pandas as pd
-import json
 
 category_master = pd.read_csv('menu2.csv')
 

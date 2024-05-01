@@ -12,8 +12,7 @@ category_master = pd.read_csv('menu.csv')
 
 categories = [
     'F1600000','F11600000','F1700000','F1500000','F6000000',
-    'F1610000','F1200000','NF3000000','NF2000000','F1000000',
-    'NF8000000','F1100000','NF7000000'
+    'F1610000','F1200000','NF3000000','NF2000000','F1000000'
     ]
 
 subcategories = category_master[
@@ -46,10 +45,10 @@ headers = {
     'Accept-Language': 'en-AE,en-GB;q=0.9,en-US;q=0.8,en;q=0.7',
     'Appid': 'Reactweb',
     'Credentials': 'include',
-    # 'Deviceid': '1298535093.1704889303',
+    'Deviceid': '1298535093.1704889303',
     'Env': 'prod',
     # 'If-Modified-Since': 'Wed, 10 Jan 2024 12:21:55 GMT',
-    'Intent': 'STANDARD',
+    'Intent': 'NOW',
     'Referer': 'https://www.carrefouruae.com',
     'Sec-Ch-Ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
     'Sec-Ch-Ua-Mobile': '?0',
@@ -58,9 +57,9 @@ headers = {
     'Sec-Fetch-Mode': 'cors',
     'Sec-Fetch-Site': 'same-origin',
     'Storeid': 'mafuae',
-    # 'Token': 'undefined',
+    'Token': 'undefined',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    # 'Userid': '2127C657-51AB-0352-DE99-EA65C2F3CC1D'
+    'Userid': '2127C657-51AB-0352-DE99-EA65C2F3CC1D'
 }
 
 
@@ -68,6 +67,9 @@ def fetch_category_data(cat):
     url = f'https://www.carrefouruae.com/api/v8/categories/{cat}'
     params['currentPage'] = 0
     response = requests.get(url, headers=headers, params=params)
+    print(response.status_code)
+    print(response.headers)
+    print(response.text)
     df_list = []
     try:
         response_json = response.json()
@@ -101,8 +103,8 @@ def main(local_stage, num_workers=5):
         return False
 
 if __name__ == "__main__":
-    pass
+    # pass
 
     # Test Cases
-    # print(fetch_category_data('F21630400'))
+    print(fetch_category_data('F21630400'))
     # main(local_stage='./data', num_workers=5)

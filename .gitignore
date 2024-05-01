@@ -142,3 +142,10 @@ Thumbs.db
 data/
 
 rough.py
+
+app.log.2024-04-24
+app.log.2024-04-29
+chromedriver.exe
+first_load_products.json
+network_logs.json
+products.json

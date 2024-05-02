@@ -1,3 +1,4 @@
+import os
 import time
 import json
 from selenium import webdriver
@@ -12,8 +13,9 @@ options = webdriver.ChromeOptions()
 
 
 class CarrefourCatExtractor:
-    def __init__(self, category):
+    def __init__(self, category, stage_path):
         self.extraction_category = category
+        self.local_stage_path = stage_path
         self.search_url = f'/api/v8/categories/{self.extraction_category}'
         self.call_url = f"https://www.carrefouruae.com/mafuae/en/c/{self.extraction_category}"
         self.driver = webdriver.Chrome(options=self.configure_browser_options())
@@ -54,6 +56,15 @@ class CarrefourCatExtractor:
                     except Exception as e:
                         print(f"Error retrieving response body: {e}")
         return None
+
+    def stage_json(self,json_obj, file_path):
+        try:
+            with open(file_path, 'w', encoding='utf-8') as f:
+                json.dump(json_obj, f, ensure_ascii=False, indent=4)
+            return True
+        except Exception as e:
+            print(f"Exception {e} occured while staging the json object")
+            return False
     
     def click_load_more(self):
         products = []
@@ -74,8 +85,7 @@ class CarrefourCatExtractor:
         if not self.first_load_page:
             page_source = self.driver.page_source
             first_load_products = self.first_load(page_source)
-            with open('first_load_products.json', 'w', encoding='utf-8') as f:
-                json.dump(first_load_products, f, ensure_ascii=False, indent=4)
+            products.extend(first_load_products)
             self.first_load_page = True
 
         try: 
@@ -97,9 +107,8 @@ class CarrefourCatExtractor:
         response_body = self.get_search_responses(logs=logs)
 
         if response_body and 'body' in response_body:
-            # print(json.loads(response_body['body']))
             response_body = json.loads(response_body['body'])
-            products = response_body.get('products', [])
+            products.extend(response_body.get('products', []))
 
         return products    
     
@@ -114,9 +123,18 @@ class CarrefourCatExtractor:
                 else:
                     products.extend(output)
         finally:
-            print(len(products))
-            with open("products.json", "w", encoding="utf-8") as f:
-                json.dump(products, f,ensure_ascii=False, indent=4)
+            print(f"Total products extracted: {len(products)}")
+            if self.stage_json(
+                json_obj = products, 
+                file_path=os.path.join(
+                    self.local_stage_path,
+                    f'{self.extraction_category}_products.json'
+                    )
+                    ):
+                print("Data successfully staged")
+            else:
+                print("Data stage issue")
+
             self.driver.close()
             self.driver.quit()
 
@@ -124,7 +142,10 @@ class CarrefourCatExtractor:
 
 
 if __name__ == "__main__":
-    category = 'NF2100100'
-    cat_extractor = CarrefourCatExtractor(category=category)
+    category = 'F21630200'
+    cat_extractor = CarrefourCatExtractor(
+        category=category, 
+        stage_path="C:\\Users\\Prajwal.G\\Documents\\POC\\Ecom Scraper\\data\\carrefour"
+        )
     cat_extractor.main()
 

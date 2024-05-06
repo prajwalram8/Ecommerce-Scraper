@@ -135,6 +135,10 @@ def run_parallel_extraction(categories, stage_path):
             future.result()  # This will raise any exceptions caught during the thread execution.
 
 if __name__ == "__main__":
-    categories = ['F21630200', 'F21630201', 'F21630202']  # Example categories
-    stage_path = "path_to_data_directory"
-    run_parallel_extraction(categories, stage_path)
+    category = 'F21630200'
+    stage_path = "C:\\Users\\Prajwal.G\\Documents\\POC\\Ecom Scraper\\data\\carrefour"
+    scrape_category(category=category, stage_path=stage_path)
+
+    # categories = ['F21630200', 'F21630201', 'F21630202']  # Example categories
+    # stage_path = "path_to_data_directory"
+    # run_parallel_extraction(categories, stage_path)

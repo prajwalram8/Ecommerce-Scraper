@@ -3,7 +3,7 @@ import json
 import os
 
 products = []
-load_stage = "C:\\Users\\Prajwal.G\\Documents\\POC\\Ecom Scraper\\data\\dev_stage"
+load_stage = "C:\\Users\\Prajwal.G\\Documents\\POC\\Ecom Scraper\\data\\carrefour"
 
 with open("first_load_products.json") as f:
     first_load = json.load(f)

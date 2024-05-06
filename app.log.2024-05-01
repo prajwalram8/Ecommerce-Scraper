@@ -1,0 +1,61 @@
+05/01/2024 03:55:25 PM - snowflake.connector.connection - INFO - Snowflake Connector for Python Version: 3.8.1, Python Version: 3.8.5, Platform: Windows-10-10.0.19041-SP0
+05/01/2024 03:55:25 PM - snowflake.connector.connection - INFO - This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+05/01/2024 03:55:28 PM - snowflake.connector.cursor - INFO - Number of results in first chunk: 1
+05/01/2024 03:55:28 PM - snowflake.connector.connection - INFO - closed
+05/01/2024 03:55:28 PM - snowflake.connector.connection - INFO - No async queries seem to be running, deleting session
+05/01/2024 03:55:28 PM - snowflake.connector.connection - INFO - Snowflake Connector for Python Version: 3.8.1, Python Version: 3.8.5, Platform: Windows-10-10.0.19041-SP0
+05/01/2024 03:55:28 PM - snowflake.connector.connection - INFO - This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+05/01/2024 03:55:34 PM - snowflake.connector.connection - INFO - closed
+05/01/2024 03:55:34 PM - snowflake.connector.connection - INFO - No async queries seem to be running, deleting session
+05/01/2024 03:55:34 PM - snowflake.connector.connection - INFO - Snowflake Connector for Python Version: 3.8.1, Python Version: 3.8.5, Platform: Windows-10-10.0.19041-SP0
+05/01/2024 03:55:34 PM - snowflake.connector.connection - INFO - This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+05/01/2024 03:55:37 PM - snowflake.connector.cursor - INFO - Number of results in first chunk: 1
+05/01/2024 03:55:37 PM - snowflake.connector.connection - INFO - closed
+05/01/2024 03:55:37 PM - snowflake.connector.connection - INFO - No async queries seem to be running, deleting session
+05/01/2024 03:55:37 PM - SNOWFLAKE JSON LOADER - INFO - Table DEV_TEST_TABLE does not exist. Creating table and loading data.
+05/01/2024 03:55:37 PM - snowflake.connector.connection - INFO - Snowflake Connector for Python Version: 3.8.1, Python Version: 3.8.5, Platform: Windows-10-10.0.19041-SP0
+05/01/2024 03:55:37 PM - snowflake.connector.connection - INFO - This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+05/01/2024 03:55:40 PM - snowflake.connector.cursor - INFO - Number of results in first chunk: 1
+05/01/2024 03:55:40 PM - snowflake.connector.connection - INFO - closed
+05/01/2024 03:55:40 PM - snowflake.connector.connection - INFO - No async queries seem to be running, deleting session
+05/01/2024 03:55:40 PM - SNOWFLAKE JSON LOADER - INFO - Data load completed successfully 01b4094b-0103-be82-0000-d01104e80b86
+05/01/2024 04:16:34 PM - snowflake.connector.connection - INFO - Snowflake Connector for Python Version: 3.8.1, Python Version: 3.8.5, Platform: Windows-10-10.0.19041-SP0
+05/01/2024 04:16:34 PM - snowflake.connector.connection - INFO - This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+05/01/2024 04:16:36 PM - snowflake.connector.cursor - INFO - Number of results in first chunk: 1
+05/01/2024 04:16:36 PM - snowflake.connector.connection - INFO - closed
+05/01/2024 04:16:37 PM - snowflake.connector.connection - INFO - No async queries seem to be running, deleting session
+05/01/2024 04:16:37 PM - snowflake.connector.connection - INFO - Snowflake Connector for Python Version: 3.8.1, Python Version: 3.8.5, Platform: Windows-10-10.0.19041-SP0
+05/01/2024 04:16:37 PM - snowflake.connector.connection - INFO - This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+05/01/2024 04:16:41 PM - snowflake.connector.connection - INFO - closed
+05/01/2024 04:16:41 PM - snowflake.connector.connection - INFO - No async queries seem to be running, deleting session
+05/01/2024 04:16:41 PM - snowflake.connector.connection - INFO - Snowflake Connector for Python Version: 3.8.1, Python Version: 3.8.5, Platform: Windows-10-10.0.19041-SP0
+05/01/2024 04:16:41 PM - snowflake.connector.connection - INFO - This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+05/01/2024 04:16:44 PM - snowflake.connector.cursor - INFO - Number of results in first chunk: 1
+05/01/2024 04:16:44 PM - snowflake.connector.connection - INFO - closed
+05/01/2024 04:16:44 PM - snowflake.connector.connection - INFO - No async queries seem to be running, deleting session
+05/01/2024 04:16:44 PM - SNOWFLAKE JSON LOADER - INFO - Table DEV_TEST_TABLE does not exist. Creating table and loading data.
+05/01/2024 04:16:44 PM - snowflake.connector.connection - INFO - Snowflake Connector for Python Version: 3.8.1, Python Version: 3.8.5, Platform: Windows-10-10.0.19041-SP0
+05/01/2024 04:16:44 PM - snowflake.connector.connection - INFO - This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+05/01/2024 04:16:47 PM - snowflake.connector.cursor - INFO - Number of results in first chunk: 1
+05/01/2024 04:16:47 PM - snowflake.connector.connection - INFO - closed
+05/01/2024 04:16:47 PM - snowflake.connector.connection - INFO - No async queries seem to be running, deleting session
+05/01/2024 04:16:47 PM - SNOWFLAKE JSON LOADER - INFO - Data load completed successfully 01b40960-0103-be82-0000-d01104e80e9e
+05/01/2024 04:46:31 PM - snowflake.connector.connection - INFO - Snowflake Connector for Python Version: 3.8.1, Python Version: 3.8.5, Platform: Windows-10-10.0.19041-SP0
+05/01/2024 04:46:31 PM - snowflake.connector.connection - INFO - This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+05/01/2024 04:46:32 PM - snowflake.connector.cursor - INFO - Number of results in first chunk: 1
+05/01/2024 04:46:32 PM - snowflake.connector.connection - INFO - closed
+05/01/2024 04:46:33 PM - snowflake.connector.connection - INFO - No async queries seem to be running, deleting session
+05/01/2024 04:46:33 PM - snowflake.connector.connection - INFO - Snowflake Connector for Python Version: 3.8.1, Python Version: 3.8.5, Platform: Windows-10-10.0.19041-SP0
+05/01/2024 04:46:33 PM - snowflake.connector.connection - INFO - This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+05/01/2024 04:46:40 PM - snowflake.connector.connection - INFO - closed
+05/01/2024 04:46:40 PM - snowflake.connector.connection - INFO - No async queries seem to be running, deleting session
+05/01/2024 04:46:40 PM - snowflake.connector.connection - INFO - Snowflake Connector for Python Version: 3.8.1, Python Version: 3.8.5, Platform: Windows-10-10.0.19041-SP0
+05/01/2024 04:46:40 PM - snowflake.connector.connection - INFO - This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+05/01/2024 04:46:43 PM - snowflake.connector.cursor - INFO - Number of results in first chunk: 1
+05/01/2024 04:46:43 PM - snowflake.connector.connection - INFO - closed
+05/01/2024 04:46:43 PM - snowflake.connector.connection - INFO - No async queries seem to be running, deleting session
+05/01/2024 04:46:43 PM - snowflake.connector.connection - INFO - Snowflake Connector for Python Version: 3.8.1, Python Version: 3.8.5, Platform: Windows-10-10.0.19041-SP0
+05/01/2024 04:46:43 PM - snowflake.connector.connection - INFO - This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+05/01/2024 04:46:47 PM - snowflake.connector.connection - INFO - closed
+05/01/2024 04:46:47 PM - snowflake.connector.connection - INFO - No async queries seem to be running, deleting session
+05/01/2024 04:46:47 PM - SNOWFLAKE JSON LOADER - INFO - Data load completed successfully 01b4097e-0103-c380-0000-d01104e8220a

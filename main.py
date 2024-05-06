@@ -130,7 +130,7 @@ if __name__ == "__main__":
     # if preprocess_and_upload_carrefour():
     #     logger.info("Carrefour loaded")
 
-    # if preprocess_and_upload_choithrams():
-    #     logger.info("Choithrams Loaded!")
+    if preprocess_and_upload_choithrams():
+        logger.info("Choithrams Loaded!")
 
 

@@ -1,6 +1,7 @@
 import os
 import time
 import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
@@ -25,6 +26,8 @@ class CarrefourCatExtractor:
     def configure_browser_options(self):
         """Configure and return Chrome browser options."""
         options = webdriver.ChromeOptions()
+        options.add_argument('--headless')  # Runs Chrome in headless mode.
+        options.add_argument('--log-level=3')  # Suppresses all logs except for critical errors in the console
         options.set_capability('goog:loggingPrefs', {'performance': 'ALL'})
         options.add_argument('--disable-blink-features=AutomationControlled')
         options.add_argument('--start-maximized')
@@ -140,12 +143,28 @@ class CarrefourCatExtractor:
 
         return None
 
+def scrape_category(category, stage_path):
+    """Function to initiate scraping for a specific category."""
+    extractor = CarrefourCatExtractor(category=category, stage_path=stage_path)
+    extractor.main()
+
+def run_parallel_extraction(categories, stage_path):
+    """Run the extraction in parallel across multiple categories."""
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        futures = [executor.submit(scrape_category, cat, stage_path) for cat in categories]
+        for future in as_completed(futures):
+            future.result()  # This will raise any exceptions caught during the thread execution.
+
 
 if __name__ == "__main__":
-    category = 'F21630200'
-    cat_extractor = CarrefourCatExtractor(
-        category=category, 
-        stage_path="C:\\Users\\Prajwal.G\\Documents\\POC\\Ecom Scraper\\data\\carrefour"
-        )
-    cat_extractor.main()
+    # category = 'F21630200'
+    # cat_extractor = CarrefourCatExtractor(
+    #     category=category, 
+    #     stage_path="C:\\Users\\Prajwal.G\\Documents\\POC\\Ecom Scraper\\data\\carrefour"
+    #     )
+    # cat_extractor.main()
+
+    categories = ['F21630200', 'F21630500', 'F21630400', 'F21630600']  # Example categories
+    stage_path = "C:\\Users\\Prajwal.G\\Documents\\POC\\Ecom Scraper\\data\\carrefour"
+    run_parallel_extraction(categories, stage_path)
 

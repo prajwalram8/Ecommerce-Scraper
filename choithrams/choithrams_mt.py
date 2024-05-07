@@ -96,13 +96,13 @@ def process_page(page):
             data = json.loads(json_string)
             items = data['items']
         except json.JSONDecodeError as e:
-            logger(f"Error parsing JSON: {e} for page: {page}")
+            logger.error(f"Error parsing JSON: {e} for page: {page}")
             error_position = e.pos  # Using the exception's position attribute if available
             snippet = print_near_error(json_string, error_position)
-            logger(snippet)
+            logger.error(snippet)
             return items
     else:
-        logger(f"Could not find the JavaScript object in the script content for page {page}")
+        logger.error(f"Could not find the JavaScript object in the script content for page {page}")
 
     return items
     

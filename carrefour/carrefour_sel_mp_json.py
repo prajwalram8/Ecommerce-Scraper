@@ -1,6 +1,9 @@
 import os
 import time
 import json
+import pandas as pd
+from random import shuffle
+from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from selenium import webdriver
 from selenium.webdriver import ActionChains
@@ -8,10 +11,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import TimeoutException, WebDriverException
-from bs4 import BeautifulSoup
 
-options = webdriver.ChromeOptions()
+from utils.utils import create_directory
+from utils.logger import setup_logging
 
+
+logger = setup_logging(name="CARREFOUR-SEL")
 
 class CarrefourCatExtractor:
     def __init__(self, category, stage_path):
@@ -57,7 +62,7 @@ class CarrefourCatExtractor:
                         body = self.driver.execute_cdp_cmd('Network.getResponseBody', {'requestId': request_id})
                         return body
                     except Exception as e:
-                        print(f"Error retrieving response body: {e}")
+                        logger.error(f"Error retrieving response body: {e}")
         return None
 
     def stage_json(self,json_obj, file_path):
@@ -66,7 +71,7 @@ class CarrefourCatExtractor:
                 json.dump(json_obj, f, ensure_ascii=False, indent=4)
             return True
         except Exception as e:
-            print(f"Exception {e} occured while staging the json object")
+            logger.error(f"Exception {e} occured while staging the json object")
             return False
     
     def click_load_more(self):
@@ -80,16 +85,16 @@ class CarrefourCatExtractor:
                 )
                 time.sleep(1)
                 cookie_button.click()
-                print("Cookie consent accepted.")
+                logger.info("Cookie consent accepted.")
                 self.cookie_consent = True
             except TimeoutException:
-                print("No cookie consent button found or not clickable.")
+                logger.warning("No cookie consent button found or not clickable.")
 
         if not self.first_load_page:
             page_source = self.driver.page_source
             first_load_products = self.first_load(page_source)
-            products.extend(first_load_products)
             self.first_load_page = True
+            return first_load_products
 
         try: 
             # Ensure the button is in view and clickable
@@ -102,7 +107,7 @@ class CarrefourCatExtractor:
             load_more_button.click()
             time.sleep(1)
         except TimeoutException:
-            print("Load More Button Not found")
+            logger.warning("Load More Button Not found")
             return None 
 
         # Get Logs parse responses and save it as products to return
@@ -126,7 +131,6 @@ class CarrefourCatExtractor:
                 else:
                     products.extend(output)
         finally:
-            print(f"Total products extracted: {len(products)}")
             if self.stage_json(
                 json_obj = products, 
                 file_path=os.path.join(
@@ -134,9 +138,9 @@ class CarrefourCatExtractor:
                     f'{self.extraction_category}_products.json'
                     )
                     ):
-                print("Data successfully staged")
+                logger.info("Data successfully staged")
             else:
-                print("Data stage issue")
+                logger.error("Data stage issue")
 
             self.driver.close()
             self.driver.quit()
@@ -145,26 +149,57 @@ class CarrefourCatExtractor:
 
 def scrape_category(category, stage_path):
     """Function to initiate scraping for a specific category."""
-    extractor = CarrefourCatExtractor(category=category, stage_path=stage_path)
+    extractor = CarrefourCatExtractor(
+        category=category, 
+        stage_path=stage_path
+        )
     extractor.main()
 
 def run_parallel_extraction(categories, stage_path):
     """Run the extraction in parallel across multiple categories."""
-    with ThreadPoolExecutor(max_workers=2) as executor:
-        futures = [executor.submit(scrape_category, cat, stage_path) for cat in categories]
-        for future in as_completed(futures):
-            future.result()  # This will raise any exceptions caught during the thread execution.
+    try:
+        category_master = pd.read_csv(
+            os.path.join(os.getcwd(), 'menu.csv')
+            )
+
+        subcategories = set(category_master[
+            category_master['L1_ID'].isin(categories)
+            ]['L2_ID'].to_list())
+
+        subcategories = list(subcategories)
+
+        shuffle(subcategories) # quick shuffle to break pattern
+
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            futures = [executor.submit(scrape_category, cat, stage_path) for cat in subcategories]
+            for future in as_completed(futures):
+                future.result()  # This will raise any exceptions caught during the thread execution.
+
+        return True
+    except Exception as e:
+        logger.error(f"Exeption {e} was raised while running parallel extraction")
 
 
 if __name__ == "__main__":
-    # category = 'F21630200'
+    pass
+    # category = 'F1200410'
     # cat_extractor = CarrefourCatExtractor(
     #     category=category, 
-    #     stage_path="C:\\Users\\Prajwal.G\\Documents\\POC\\Ecom Scraper\\data\\carrefour"
+    #     stage_path="C:\\Users\\Prajwal.G\\Documents\\POC\\Ecom Scraper\\data\\CARREFOUR"
     #     )
     # cat_extractor.main()
 
-    categories = ['F21630200', 'F21630500', 'F21630400', 'F21630600']  # Example categories
-    stage_path = "C:\\Users\\Prajwal.G\\Documents\\POC\\Ecom Scraper\\data\\carrefour"
-    run_parallel_extraction(categories, stage_path)
+    # start_time = time.time()
+
+    # categories = [
+    #     'F1600000','F11600000','F1700000','F1500000','F6000000',
+    #     'F1610000','F1200000','NF3000000','NF2000000','F1000000'
+    #     ]
+
+    # stage_path = os.path.join(os.getcwd(), 'data', 'CARREFOUR')
+    # create_directory(stage_path)
+
+    # run_parallel_extraction(categories, stage_path)
+
+    # print(f"Time for full extraction at 2 cores = {time.time() - start_time} seconds")
 

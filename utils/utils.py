@@ -4,50 +4,12 @@ from .logger import setup_logging
 # Initializing helper classes and functions
 logger = setup_logging(__name__)
 
-class ProjectDirectory:
-    def __init__(self, name, root='./data') -> None:
-        self.root = root
-        self.name = os.path.join(self.root, name)
-        self.created_directories = {}
-        if not os.path.exists(self.name):
-            os.makedirs(self.name)
-            logger.info(f"Created Project Directory in path {self.name}")
-        self.created_directories[name] = self.name
-        
-        # Create default snowflake stage directory
-        self.create_ds_if_not_exists('snowflake_stage')
-
-    def create_ds_if_not_exists(self, *directories) -> None:
-        """
-        For each given directory name, create the directory if it does not exist.
-        """
-        for directory in directories:
-            path = os.path.join(self.name, directory)
-            if not os.path.exists(path):
-                os.makedirs(path)
-                logger.info(f"Created subdirectories at path {path}")
-            self.created_directories[directory] = path
-
-    def get_directories(self, query):
-        """
-        Return a list of full paths of the directories that have been created.
-        """
-        return self.created_directories.get(query)
-    
-
-def has_csv_files(folder_path):
-        """
-        Check if the given folder contains any CSV files
-        """
-        for file_name in os.listdir(folder_path):
-            file_path = os.path.join(folder_path, file_name)
-            # Check if the file is a CSV file
-            if file_name.endswith('.csv') and os.path.isfile(file_path):
-                return True
-
-        # No CSV files were found
-        return False
-
+def create_directory(dir_path):
+    try:
+        os.makedirs(dir_path)
+    except FileExistsError:
+        # directory already exists
+        pass
 
 def has_json_files(folder_path):
         """
@@ -64,3 +26,21 @@ def has_json_files(folder_path):
 
 def py_file_name():
     return os.path.basename(__file__).replace('.py','')
+
+
+def delete_folder_contents(folder_path):
+    """
+    Recursively delete the contents of a folder.
+    """
+    try:
+        for file_name in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, file_name)
+            if os.path.isdir(file_path):
+                delete_folder_contents(file_path)
+                os.rmdir(file_path)
+            else:
+                os.remove(file_path)
+        logger.info(f"Folder content of: {folder_path} deleted!")
+    except Exception as e:
+        logger.error(f"Error while deleting folder contents: {e}", exc_info=True)
+        raise

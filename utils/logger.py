@@ -18,7 +18,7 @@ def setup_logging(name):
         
         # Define the console handler
         console = logging.StreamHandler()
-        console.setLevel(logging.WARNING)
+        console.setLevel(logging.INFO)
         console.setFormatter(logging.Formatter('%(name)s - %(levelname)s - %(message)s'))
         
         # Add handlers to the root logger

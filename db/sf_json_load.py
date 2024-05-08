@@ -206,17 +206,18 @@ class jsonDataLoader:
             return None
 
 if __name__ == "__main__":
-    dataloader = jsonDataLoader()
-    statement = '''
-    JSON_DATA:"id"::STRING as EAN,
-    JSON_DATA:"item_name"::STRING as NAME,
-    JSON_DATA:"item_price"::FLOAT as PRICE,
-    JSON_DATA:"item_link"::STRING as LINK,
-    JSON_DATA:"item_quantity"::STRING as QUANTITY,
-    CURRENT_TIMESTAMP() as LOAD_TIMESTAMP
-    '''
-    dataloader.manage_data_loading(
-        name='SAMPLE', 
-        local_stage_path="C:\\Users\\Prajwal.G\\Documents\\POC\\Ecom Scraper\\data\\spinneys",
-        select_statement=statement
-        )
+    pass
+    # dataloader = jsonDataLoader()
+    # statement = '''
+    # JSON_DATA:"id"::STRING as EAN,
+    # JSON_DATA:"item_name"::STRING as NAME,
+    # JSON_DATA:"item_price"::FLOAT as PRICE,
+    # JSON_DATA:"item_link"::STRING as LINK,
+    # JSON_DATA:"item_quantity"::STRING as QUANTITY,
+    # CURRENT_TIMESTAMP() as LOAD_TIMESTAMP
+    # '''
+    # dataloader.manage_data_loading(
+    #     name='SAMPLE', 
+    #     local_stage_path="C:\\Users\\Prajwal.G\\Documents\\POC\\Ecom Scraper\\data\\spinneys",
+    #     select_statement=statement
+    #     )

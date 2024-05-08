@@ -1,11 +1,9 @@
-# from carrefour.carrefour_mt_json import main as carrefour_main
 import os
 from spinneys.spinneys_mt import main as spinneys_main
 from choithrams.choithrams_mt import main as choithrams_main
 from carrefour.carrefour_sel_mp_json import run_parallel_extraction as carrefour_main
 from utils.utils import create_directory, delete_folder_contents
 from utils.logger import setup_logging
-
 from db.sf_json_load import jsonDataLoader as JSONDataLoader
 
 # Initializing helper classes and functions
@@ -145,11 +143,11 @@ def preprocess_and_upload_choithrams(name = 'CHOITHRAMS'):
 
 
 if __name__ == "__main__":
-    # if preprocess_and_upload_spinneys():
-    #     logger.info("Spinneys loaded!")
+    if preprocess_and_upload_spinneys():
+        logger.info("Spinneys loaded!")
 
-    # if preprocess_and_upload_choithrams():
-    #     logger.info("Choithrams Loaded!")
+    if preprocess_and_upload_choithrams():
+        logger.info("Choithrams Loaded!")
 
     if preprocess_and_upload_carrefour():
         logger.info("Carrefour loaded")

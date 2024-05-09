@@ -1,13 +1,17 @@
 import os
+from datetime import datetime as dt
 from spinneys.spinneys_mt import main as spinneys_main
 from choithrams.choithrams_mt import main as choithrams_main
 from carrefour.carrefour_sel_mp_json import run_parallel_extraction as carrefour_main
 from utils.utils import create_directory, delete_folder_contents
 from utils.logger import setup_logging
+from utils.spaces_upload import FolderUploader
 from db.sf_json_load import jsonDataLoader as JSONDataLoader
 
 # Initializing helper classes and functions
 logger = setup_logging('main')
+uploader = FolderUploader('config.ini')
+
 
 # Path Dependencies
 data_stage_folder = os.path.join(os.getcwd(), 'data')
@@ -63,6 +67,7 @@ def preprocess_and_upload_carrefour(name = 'CARREFOUR'):
         local_stage_path=local_stage,
         select_statement=statement
         )
+        uploader.upload_folder(local_stage, 'ecommerceScraping', f'{name}/{dt.strftime(dt.now(), "%Y%m%d")}')
         delete_folder_contents(folder_path=local_stage)
         logger.info(f"Extraction, Preprocessing & Upload of {name} has been completed.")
         return True
@@ -94,10 +99,11 @@ def preprocess_and_upload_spinneys(name = 'SPINNEYS'):
         CURRENT_TIMESTAMP() as LOAD_TIMESTAMP
         '''
         dc.manage_data_loading(
-        name='SPINNEYS', 
+        name=name, 
         local_stage_path=local_stage,
         select_statement=statement
         )
+        uploader.upload_folder(local_stage, 'ecommerceScraping', f'{name}/{dt.strftime(dt.now(), "%Y%m%d")}')
         delete_folder_contents(folder_path=local_stage)
         logger.info(f"Extraction, Preprocessing & Upload of {name} has been completed.")
         return True
@@ -130,10 +136,11 @@ def preprocess_and_upload_choithrams(name = 'CHOITHRAMS'):
         CURRENT_TIMESTAMP() as LOAD_TIMESTAMP
         '''
         dc.manage_data_loading(
-        name='CHOITHRAMS', 
+        name=name, 
         local_stage_path=local_stage,
         select_statement=statement
         )
+        uploader.upload_folder(local_stage, 'ecommerceScraping', f'{name}/{dt.strftime(dt.now(), "%Y%m%d")}')
         delete_folder_contents(folder_path=local_stage)
         logger.info(f"Extraction, Preprocessing & Upload of {name} has been completed.")
         return True

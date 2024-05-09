@@ -62,7 +62,7 @@ class CarrefourCatExtractor:
                         body = self.driver.execute_cdp_cmd('Network.getResponseBody', {'requestId': request_id})
                         return body
                     except Exception as e:
-                        logger.error(f"Error retrieving response body: {e}")
+                        logger.error(f"Error retrieving response body: {e} for {self.extraction_category}")
         return None
 
     def stage_json(self,json_obj, file_path):
@@ -71,7 +71,7 @@ class CarrefourCatExtractor:
                 json.dump(json_obj, f, ensure_ascii=False, indent=4)
             return True
         except Exception as e:
-            logger.error(f"Exception {e} occured while staging the json object")
+            logger.error(f"Exception {e} occured while staging the json object for {self.extraction_category}")
             return False
     
     def click_load_more(self):

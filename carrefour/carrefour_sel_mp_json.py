@@ -4,6 +4,7 @@ import json
 import pandas as pd
 from random import shuffle
 from bs4 import BeautifulSoup
+import traceback
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from selenium import webdriver
 from selenium.webdriver import ActionChains
@@ -178,6 +179,8 @@ def run_parallel_extraction(categories, stage_path):
         return True
     except Exception as e:
         logger.error(f"Exeption {e} was raised while running parallel extraction")
+        logger.error(traceback.format_exc())
+        return False
 
 
 if __name__ == "__main__":

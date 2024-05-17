@@ -45,8 +45,11 @@ class CarrefourCatExtractor:
     def first_load(self, page_source):
         page_source = BeautifulSoup(page_source,'html.parser')
         tag = page_source.find('script', {"type": "application/json"})
-        json_data = json.loads(tag.string)
-        products = json_data['props']['initialState']['search']['products']
+        try:
+            json_data = json.loads(tag.string)
+            products = json_data['props']['initialState']['search']['products']
+        except AttributeError:
+            products = []
         return products
     
     def get_search_responses(self, logs):
